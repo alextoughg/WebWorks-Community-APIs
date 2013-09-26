@@ -35,8 +35,8 @@ sample running on your phone/simulator!
  *  - message : A string with the contents of the alert box.
  * callback is a function that gets called as soon as the 
  * native code has done its work. Expected signature:
- * ```callback(button)```, where ```button``` is a string that describes 
- * the selected option. Default value for ```button``` is 'ok'.
+ * callback(button), where button is a string that describes 
+ * the selected option. Default value for button is 'ok'.
  */
  window.plugins.messageBox.alert(options, callback)
 
@@ -52,8 +52,8 @@ sample running on your phone/simulator!
  *  - message : A string with the contents of the confirm box.
  * callback is a function that gets called as soon as the 
  * native code has done its work. Expected signature: 
- * ```callback(button)```, where ```button``` is a string that describes 
- * the selected option. Possible values for ```button``` are 'yes' or 'no'.
+ * callback(button), where button is a string that describes 
+ * the selected option. Possible values for button are 'yes' or 'no'.
  */
  window.plugins.messageBox.confirm(options, callback)
 
@@ -70,7 +70,7 @@ sample running on your phone/simulator!
  *  - message : A string with the contents of the prompt box.
  * callback is a function that gets called as soon as the 
  * native code has done its work. Expected signature: 
- * ```callback(button, value)```, where ```button``` is a string that describes 
+ * callback(button, value), where button is a string that describes 
  * the selected option (possible values: 'ok' or 'cancel') and value is a string 
  * containing the user's input. 
  */
