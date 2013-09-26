@@ -52,6 +52,23 @@ cordova run
  * native code has done its work.
  */
  window.plugins.messageBox.confirm(options, callback)
+
+
+/*
+ * Displays a password prompt defined according to options. 
+ * options is an object that contains one or more of the 
+ * following fields:
+ *	- okButtonTitle: Default value 'OK'.
+ *  - yesButtonTitle: Default value 'Yes'.
+ *  - noButtonTitle: Default value 'No'.
+ *  - cancelButtonTitle: Default value 'Cancel'.
+ *  - title : A string describing the title of the alert box.
+ *  - message : A string with the contents of the alert box.
+ * callback is a function that gets called as soon as the 
+ * native code has done its work.
+ */
+ window.plugins.messageBox.prompt(options, callback)
+
 ```
 
 ## License
