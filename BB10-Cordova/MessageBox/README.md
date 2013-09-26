@@ -16,6 +16,8 @@ cordova plugin add ../plugin/
 ```
 cordova run
 ```
+6. Wait for a few seconds, until ```cordova run``` returns. You now have the 
+sample running on your phone/simulator!
 
 ## Javascript API
 
@@ -33,8 +35,8 @@ cordova run
  *  - message : A string with the contents of the alert box.
  * callback is a function that gets called as soon as the 
  * native code has done its work. Expected signature:
- * callback(selectedButtonIndex).
- * Can this be standard?
+ * ```callback(button)```, where ```button``` is a string that describes 
+ * the selected option. Default value for ```button``` is 'ok'.
  */
  window.plugins.messageBox.alert(options, callback)
 
@@ -46,10 +48,12 @@ cordova run
  *  - yesButtonTitle: Default value 'Yes'.
  *  - noButtonTitle: Default value 'No'.
  *  - cancelButtonTitle: Default value 'Cancel'.
- *  - title : A string describing the title of the alert box.
- *  - message : A string with the contents of the alert box.
+ *  - title : A string describing the title of the confirm box.
+ *  - message : A string with the contents of the confirm box.
  * callback is a function that gets called as soon as the 
- * native code has done its work.
+ * native code has done its work. Expected signature: 
+ * ```callback(button)```, where ```button``` is a string that describes 
+ * the selected option. Possible values for ```button``` are 'yes' or 'no'.
  */
  window.plugins.messageBox.confirm(options, callback)
 
@@ -62,10 +66,13 @@ cordova run
  *  - yesButtonTitle: Default value 'Yes'.
  *  - noButtonTitle: Default value 'No'.
  *  - cancelButtonTitle: Default value 'Cancel'.
- *  - title : A string describing the title of the alert box.
- *  - message : A string with the contents of the alert box.
+ *  - title : A string describing the title of the prompt box.
+ *  - message : A string with the contents of the prompt box.
  * callback is a function that gets called as soon as the 
- * native code has done its work.
+ * native code has done its work. Expected signature: 
+ * ```callback(button, value)```, where ```button``` is a string that describes 
+ * the selected option (possible values: 'ok' or 'cancel') and value is a string 
+ * containing the user's input. 
  */
  window.plugins.messageBox.prompt(options, callback)
 
