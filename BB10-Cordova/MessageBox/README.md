@@ -1,7 +1,8 @@
 Cordova MessageBox Plugin For Blackberry 10
 ===========================================
 
-This plugin provides a standard API for the Dialog object documented in BB HTML5 Webworks.
+This plugin provides a standard API for the Dialog object documented in BB HTML5 Webworks, 
+in addition to an extension created for password prompts.
 
 ## How to setup the plugin and run the sample
 
@@ -69,4 +70,20 @@ sample running on your phone/simulator!
 
 ## License
 
-Apache 2 License
+Copyright 2013 Jasmin Auger and Alex Tough
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+## Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
