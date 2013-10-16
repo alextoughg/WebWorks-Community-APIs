@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+#include <json/reader.h>
+#include <json/writer.h>
+
+#include <zxing/common/GreyscaleLuminanceSource.h>
+#include <zxing/common/HybridBinarizer.h>
+#include <zxing/MultiFormatReader.h>
+#include <img/img.h>
+#include <stdio.h>
+
+#include <sstream>
+
 #include <string>
 #include "../public/tokenizer.h"
 #include "template_js.hpp"
@@ -80,6 +91,10 @@ string TemplateJS::InvokeMethod(const string& command) {
 	std::string arg = command.substr(callbackIndex + 1, command.length());
 
 	// based on the command given, run the appropriate method in template_ndk.cpp
+	if(str_command == "startRead"){
+		return m_pTemplateController->templateStartRead();
+	}
+
 	if (strCommand == "testString") {
 		return m_pTemplateController->templateTestString();
 	} else if (strCommand == "testStringInput") {

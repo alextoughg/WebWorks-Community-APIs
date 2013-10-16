@@ -18,6 +18,72 @@ var _self = {},
 	_ID = "community.templateplugin",
 	exec = cordova.require("cordova/exec");
 
+
+	/* Start scanning for barcodes. 
+	 * @param codeFound
+	 *			Function that executes when the barcode has been recognized 
+	 *			successfully. Expected signature: codeFound(data)
+	 * @param errorFound
+	 * 			Function that executes when the barcode has NOT been recognized 
+	 *			successfully. Expected signature: errorFound(data)
+	 * @param canvasID 
+	 *			ID of the Canvas element for displaying the viewfinder.
+	 *			The viewfinder will be resized to the size of the canvas given.
+	 * @param successStart
+	 *			Function that is called when the everything has been set up 
+	 *			properly and we are able to start the scan.
+	 *			Expected signature: successStart(data), where data = ?
+	 */
+	_self.startRead = function (codeFound, errorFound, canvasID, successStart) {
+		if (reading === true) {
+			return "Stop Scanning before scanning again";
+		}
+
+		/*
+		if ( typeof(successStart) == "function" ) {
+			window.webworks.event.once(_ID, "community.barcodescanner.started", successStart);
+		}
+		*/
+		if ( canvasID !== null ) {
+			canvas = document.getElementById(canvasID);
+			window.webworks.event.add(_ID, "community.barcodescanner.frameavailable", frameAvailable);
+		}
+
+		/*
+		if ( typeof(errorFound) == "function" ) {
+			errorfoundCallback = errorFound;
+			window.webworks.event.once(_ID, "community.barcodescanner.errorfound", errorfoundCallback);
+		}
+		if ( typeof(codeFound) == "function" ) {
+			codefoundCallback = codeFound;
+			window.webworks.event.once(_ID, "community.barcodescanner.codefound", codefoundCallback);
+		}
+		*/
+		blackberry.io.sandbox = false;
+		reading = true;
+		// Turn on prevent sleep, if it's in the app
+		if (community.preventsleep) {
+			if (!community.preventsleep.isSleepPrevented) {
+				community.preventsleep.setPreventSleep(true);
+				sleepPrevented = true;
+			}
+		}
+
+		var success = function (data, response) {
+				var json = JSON.parse(data);
+				callback(json);
+			},
+			fail = function (data, response) {
+				console.log("Error: " + data);
+			};
+		exec(success, fail, _ID, "startRead", null);
+
+		// This method calls: 
+		// startRead(success, fail, args=null)
+		// where the success and fail callbacks are provided by Webworks.
+		//return window.webworks.execAsync(_ID, "startRead", null);
+	};
+
 	// These methods are called by your App's JavaScript
 	// They make WebWorks function calls to the methods
 	// in the index.js of the Extension

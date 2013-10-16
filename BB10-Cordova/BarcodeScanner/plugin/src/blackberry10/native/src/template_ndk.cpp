@@ -37,6 +37,16 @@ TemplateNDK::TemplateNDK(TemplateJS *parent) {
 TemplateNDK::~TemplateNDK() {
 }
 
+/*
+* BarcodeScannerNDK::startRead
+*
+* This method is called to start a QR code read. A connection is opened to the device camera
+* and the photo viewfinder is started.
+*/
+std::string TemplateNDK::startRead() {
+	return "Template Test Function, got: " + inputString;
+}
+
 // These methods are the true native code we intend to reach from WebWorks
 std::string TemplateNDK::templateTestString() {
 	return "Template Test Function";
