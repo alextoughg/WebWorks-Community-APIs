@@ -35,6 +35,16 @@ var _self = {},
 	 *			Expected signature: successStart(data), where data = ?
 	 */
 	_self.startRead = function (codeFound, errorFound, canvasID, successStart) {
+
+		// For callbacks
+		var success = function (data, response) {
+				var json = JSON.parse(data);
+				callback(json);
+			},
+			fail = function (data, response) {
+				console.log("Error: " + data);
+			};
+
 		if (reading === true) {
 			return "Stop Scanning before scanning again";
 		}
@@ -44,6 +54,12 @@ var _self = {},
 			window.webworks.event.once(_ID, "community.barcodescanner.started", successStart);
 		}
 		*/
+
+		if ( typeof(successStart) == "function" ) {
+			// To register the callback
+			exec(successStart, fail, _ID, "registerCallbackOnce", {callback: "successStart"});
+		}
+
 		if ( canvasID !== null ) {
 			canvas = document.getElementById(canvasID);
 			window.webworks.event.add(_ID, "community.barcodescanner.frameavailable", frameAvailable);
@@ -69,13 +85,6 @@ var _self = {},
 			}
 		}
 
-		var success = function (data, response) {
-				var json = JSON.parse(data);
-				callback(json);
-			},
-			fail = function (data, response) {
-				console.log("Error: " + data);
-			};
 		exec(success, fail, _ID, "startRead", null);
 
 		// This method calls: 

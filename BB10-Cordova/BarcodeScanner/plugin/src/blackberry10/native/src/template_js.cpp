@@ -35,17 +35,17 @@ using namespace std;
 /**
  * Default constructor.
  */
-TemplateJS::TemplateJS(const std::string& id) :
+BarcodeScannerJS::BarcodeScannerJS(const std::string& id) :
 		m_id(id) {
-	m_pTemplateController = new webworks::TemplateNDK(this);
+	m_pBarcodeScannerController = new webworks::BarcodeScannerNDK(this);
 }
 
 /**
- * TemplateJS destructor.
+ * BarcodeScannerJS destructor.
  */
-TemplateJS::~TemplateJS() {
-	if (m_pTemplateController)
-		delete m_pTemplateController;
+BarcodeScannerJS::~BarcodeScannerJS() {
+	if (m_pBarcodeScannerController)
+		delete m_pBarcodeScannerController;
 }
 
 /**
@@ -53,17 +53,17 @@ TemplateJS::~TemplateJS() {
  * extension.
  */
 char* onGetObjList() {
-	static char name[] = "TemplateJS";
+	static char name[] = "BarcodeScannerJS";
 	return name;
 }
 
 /**
- * This method is used by JNext to instantiate the TemplateJS object when
+ * This method is used by JNext to instantiate the BarcodeScannerJS object when
  * an object is created on the JavaScript server side.
  */
 JSExt* onCreateObject(const string& className, const string& id) {
-	if (className == "TemplateJS") {
-		return new TemplateJS(id);
+	if (className == "BarcodeScannerJS") {
+		return new BarcodeScannerJS(id);
 	}
 
 	return NULL;
@@ -72,7 +72,7 @@ JSExt* onCreateObject(const string& className, const string& id) {
 /**
  * Method used by JNext to determine if the object can be deleted.
  */
-bool TemplateJS::CanDelete() {
+bool BarcodeScannerJS::CanDelete() {
 	return true;
 }
 
@@ -82,7 +82,7 @@ bool TemplateJS::CanDelete() {
  * for invoking native code. This method is triggered when JNext.invoke is
  * called on the JavaScript side with this native objects id.
  */
-string TemplateJS::InvokeMethod(const string& command) {
+string BarcodeScannerJS::InvokeMethod(const string& command) {
 	// format must be: "command callbackId params"
 	size_t commandIndex = command.find_first_of(" ");
 	std::string strCommand = command.substr(0, commandIndex);
@@ -92,26 +92,28 @@ string TemplateJS::InvokeMethod(const string& command) {
 
 	// based on the command given, run the appropriate method in template_ndk.cpp
 	if(str_command == "startRead"){
-		return m_pTemplateController->templateStartRead();
+		// here arg contains the successStartCallbackId and 
+		// errorCallbackId
+		return m_pBarcodeScannerController->barcodescannerStartRead(callbackId, arg);
 	}
 
 	if (strCommand == "testString") {
-		return m_pTemplateController->templateTestString();
+		return m_pBarcodeScannerController->templateTestString();
 	} else if (strCommand == "testStringInput") {
-		return m_pTemplateController->templateTestString(arg);
+		return m_pBarcodeScannerController->templateTestString(arg);
 	} else if (strCommand == "templateProperty") {
 		// if arg exists we are setting property
 		if (arg != strCommand) {
-			m_pTemplateController->setTemplateProperty(arg);
+			m_pBarcodeScannerController->setBarcodeScannerProperty(arg);
 		} else {
-			return m_pTemplateController->getTemplateProperty();
+			return m_pBarcodeScannerController->getBarcodeScannerProperty();
 		}
 	} else if (strCommand == "testAsync") {
-		m_pTemplateController->templateTestAsync(callbackId, arg);
+		m_pBarcodeScannerController->templateTestAsync(callbackId, arg);
 	} else if (strCommand == "templateStartThread") {
-		return m_pTemplateController->templateStartThread(callbackId);
+		return m_pBarcodeScannerController->templateStartThread(callbackId);
 	} else if (strCommand == "templateStopThread") {
-		return m_pTemplateController->templateStopThread();
+		return m_pBarcodeScannerController->templateStopThread();
 	}
 
 	strCommand.append(";");
@@ -120,7 +122,7 @@ string TemplateJS::InvokeMethod(const string& command) {
 }
 
 // Notifies JavaScript of an event
-void TemplateJS::NotifyEvent(const std::string& event) {
+void BarcodeScannerJS::NotifyEvent(const std::string& event) {
 	std::string eventString = m_id + " ";
 	eventString.append(event);
 	SendPluginEvent(eventString.c_str(), m_pContext);

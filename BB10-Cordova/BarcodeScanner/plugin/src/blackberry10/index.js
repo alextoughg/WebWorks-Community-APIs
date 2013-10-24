@@ -16,16 +16,49 @@
 
 var barcodescanner,
 	// For callbacks
+	successStartCallbackId,
+	errorFoundCallbackId,
+	codeFoundCallbackId,
 	resultObjs = {},
-	threadCallback = null,
-   _utils = require("../../lib/utils");
+	//threadCallback = null,
+   _utils = require("../../lib/utils"),
+
 
 module.exports = {
+
+	registerCallbackOnce : function(success, fail, args, env){
+		var result = PluginResult(args, env),
+			callback = JSON.parse(decodeURIComponent(args["callback"]));
+		
+
+		switch(callback){
+			case "successStart":
+				successStartCallbackId = result.callbackId;
+				break;
+			case "errorFound":
+				errorFoundCallbackId = result.callbackId;
+				break;
+			case "codeFound":
+				codeFoundCallbackId = result.callbackId;
+				break;
+			default:
+				console.log("registerCallbackOnce received an " +
+					"inappropriate callback");
+				break;
+		}
+
+		resultObjs[result.callbackId] = result;
+
+		// We don't return the result directly, but we 
+		// tell Cordova to keep our callback around
+		// (for onEvent)
+		result.noResult(true);
+	}
 
 	startRead : function(success, fail, args, env){
 		var result = PluginResult(args, env);
 		resultObjs[result.callbackId] = result;
-		barcodescanner.getInstance().startRead(result.callbackId);
+		barcodescanner.getInstance().startRead(result.callbackId)
 		result.noResult(true);
 	}
 
@@ -117,7 +150,8 @@ JNEXT.barcodescanner = function () {
 	// ************************
 
 	self.startRead = function(callbackId){
-		return JNEXT.invoke(self.m_id, "startRead");
+		return JNEXT.invoke(self.m_id, "startRead " + callbackId + " " + 
+			successStartCallbackId + " " + errorFoundCallbackId);
 	}
 
 	// calls into InvokeMethod(string command) in barcodescanner_js.cpp
@@ -137,18 +171,67 @@ JNEXT.barcodescanner = function () {
 			return JNEXT.invoke(self.m_id, "barcodescannerProperty");
 		}
 	};
+
+
+// Fired by the Event framework (used by asynchronous callbacks)
+/*
+        self.onEvent = function (strData) {
+                var arData = strData.split(" "),
+                        strEventDesc = arData[0],
+                        jsonData;
+                // Event names are set in native code when fired,
+                // and must be checked here.
+                if (strEventDesc === "community.barcodescanner.codefound.native") {
+                        // Slice off the event name and the rest of the data is our JSON
+                        jsonData = arData.slice(1, arData.length).join(" ");
+                        _event.trigger("community.barcodescanner.codefound", JSON.parse(jsonData));
+                }
+                else if ( strEventDesc === "community.barcodescanner.errorfound.native") {
+                        jsonData = arData.slice(1, arData.length).join(" ");
+                        _event.trigger("community.barcodescanner.errorfound", JSON.parse(jsonData));
+                }
+                else if ( strEventDesc === "community.barcodescanner.frameavailable.native") {
+                        jsonData = arData.slice(1, arData.length).join(" ");
+                        _event.trigger("community.barcodescanner.frameavailable", JSON.parse(jsonData));
+                }
+                else if ( strEventDesc === "community.barcodescanner.started.native"){
+                        jsonData = arData.slice(1, arData.length).join(" ");
+                        _event.trigger("community.barcodescanner.started", JSON.parse(jsonData));
+                }
+                else if ( strEventDesc === "community.barcodescanner.ended.native") {
+                        jsonData = arData.slice(1, arData.length).join(" ");
+                        _event.trigger("community.barcodescanner.ended", JSON.parse(jsonData));
+                }
+        };
+*/
+
+
+
 	// Fired by the Event framework (used by asynchronous callbacks)
 	self.onEvent = function (strData) {
 		var arData = strData.split(" "),
 			callbackId = arData[0],
 			result = resultObjs[callbackId],
-			data = arData.slice(1, arData.length).join(" ");
+			//data = arData.slice(1, arData.length).join(" ");
+			jsonData;
 
 		if (result) {
-			if (callbackId != threadCallback) {
-				result.callbackOk(data, false);
+
+			if(callbackId == successStartCallbackId){
+				jsonData = arData.slice(1, arData.length).join(" ");
+				// For standard asynchronous one-time events(those 
+				// registered with .once).
+				// Calls the success method we registered at the beginning 
+				// of the flow, in client.js.
+				result.callbackOk(jsonData, false);
 				delete resultObjs[callbackId];
-			} else {
+			} else if (callbackId == errorFoundCallbackId){
+				jsonData = arData.slice(1, arData.length).join(" ");
+				// For standard asynchronous one-time events(those 
+				// registered with .once).
+				result.callbackOk(jsonData, false);
+				delete resultObjs[callbackId];
+			} else{
 				result.callbackOk(data, true);
 			}
 		}
