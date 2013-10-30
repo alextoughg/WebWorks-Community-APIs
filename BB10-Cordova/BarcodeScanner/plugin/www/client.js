@@ -69,12 +69,25 @@ var _self = {},
 		if ( typeof(errorFound) == "function" ) {
 			errorfoundCallback = errorFound;
 			window.webworks.event.once(_ID, "community.barcodescanner.errorfound", errorfoundCallback);
+		}*/
+
+		if ( typeof(errorFound) == "function" ) {
+			exec(errorFound, fail, _ID, "registerCallbackOnce", {callback: "errorFound"});	
 		}
+
+
+		/*
 		if ( typeof(codeFound) == "function" ) {
 			codefoundCallback = codeFound;
 			window.webworks.event.once(_ID, "community.barcodescanner.codefound", codefoundCallback);
 		}
 		*/
+
+		if ( typeof(errorFound) == "function" ) {
+			exec(codeFound, fail, _ID, "registerCallbackOnce", {callback: "codeFound"});	
+		}
+
+
 		blackberry.io.sandbox = false;
 		reading = true;
 		// Turn on prevent sleep, if it's in the app
@@ -92,6 +105,8 @@ var _self = {},
 		// where the success and fail callbacks are provided by Webworks.
 		//return window.webworks.execAsync(_ID, "startRead", null);
 	};
+
+	/*
 
 	// These methods are called by your App's JavaScript
 	// They make WebWorks function calls to the methods
@@ -181,5 +196,12 @@ var _self = {},
 		exec(success, fail, _ID, "stopThread", null);
 		return result;
 	};
+
+	*/
+
+	function frameAvailable(data){
+		latestFrame = data.frame;
+		timeout = setTimeout(readFile, 4, latestFrame);
+	}
 
 module.exports = _self;

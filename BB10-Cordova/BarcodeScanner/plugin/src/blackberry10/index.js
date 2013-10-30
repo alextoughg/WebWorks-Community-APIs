@@ -55,6 +55,45 @@ module.exports = {
 		result.noResult(true);
 	}
 
+	registerFrameAvailableCallback : function(success, fail, args, env){
+		var result = PluginResult(args, env);
+
+		if(!frameAvailableCallback){
+			frameAvailableCallback = result.callbackId;
+			resultObjs[result.callbackId] = result;
+			// Keep callback
+        	result.ok(template.getInstance().startThread(result.callbackId), true);
+		} else{
+			// Error message, don't keep callback
+			result.error(template.getInstance().startThread(result.callbackId), false);
+		}
+		
+
+		switch(callback){
+			case "successStart":
+				successStartCallbackId = result.callbackId;
+				break;
+			case "errorFound":
+				errorFoundCallbackId = result.callbackId;
+				break;
+			case "codeFound":
+				codeFoundCallbackId = result.callbackId;
+				break;
+			default:
+				console.log("registerCallbackOnce received an " +
+					"inappropriate callback");
+				break;
+		}
+
+		resultObjs[result.callbackId] = result;
+
+		// We don't return the result directly, but we 
+		// tell Cordova to keep our callback around
+		// (for onEvent)
+		result.noResult(true);
+
+	}
+
 	startRead : function(success, fail, args, env){
 		var result = PluginResult(args, env);
 		resultObjs[result.callbackId] = result;
