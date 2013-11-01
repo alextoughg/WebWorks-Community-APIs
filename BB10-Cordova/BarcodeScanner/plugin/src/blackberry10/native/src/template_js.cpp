@@ -92,8 +92,8 @@ string BarcodeScannerJS::InvokeMethod(const string& command) {
 
 	// based on the command given, run the appropriate method in template_ndk.cpp
 	if(str_command == "startRead"){
-		// here arg contains the successStartCallbackId and 
-		// errorCallbackId
+		// here arg contains the successStartCallbackId, errorFoundCallbackId
+		// and frameAvailableCallbackId
 		return m_pBarcodeScannerController->barcodescannerStartRead(callbackId, arg);
 	}
 

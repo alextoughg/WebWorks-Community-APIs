@@ -158,6 +158,9 @@ static uint32_t rotation = 0;
      */
     void image_callback(camera_handle_t handle,camera_buffer_t* buf,void* arg) {
 
+        // Not sure if this would work
+        string frameAvailableCallbackId = (string) arg;
+
        	if (buf->frametype == CAMERA_FRAMETYPE_JPEG) {
 			fprintf(stderr, "still image size: %lld\n", buf->framedesc.jpeg.bufsize);
 
@@ -220,9 +223,10 @@ static uint32_t rotation = 0;
 
 			// Send the file path for loading in the front end since JNEXT only handles strings
 			root["frame"]  = tempFilePath;
-			std::string event = "community.barcodescanner.frameavailable.native";
+			//std::string event = "community.barcodescanner.frameavailable.native";
 			if ( eventDispatcher != NULL ){
-				 eventDispatcher->NotifyEvent(event + " " + writer.write(root));
+				 //eventDispatcher->NotifyEvent(event + " " + writer.write(root));
+                eventDispatcher->NotifyEvent(frameAvailableCallbackId + " " + writer.write(root));
 			}
        	}
 
@@ -249,12 +253,14 @@ static uint32_t rotation = 0;
     int BarcodeScannerNDK::barcodescannerStartRead(const std::string& callbackId, 
         const std::string& inputString) {
 
-        // get successStartCallbackId and errorFoundCallbackId from inputString
+        // Get successStartCallbackId, errorFoundCallbackId and frameAvailableCallbackId 
+        // from inputString
         size_t successStartIndex = inputString.find_first_of(" ");
         std::string successStartCallbackId = inputString.substr(0, successStartIndex);
         size_t errorFoundIndex = inputString.find_first_of(" ", successStartIndex + 1);
         std::string errorFoundCallbackId = inputString.substr(successStartIndex + 1, errorFoundIndex - successStartIndex - 1);
-
+        size_t frameAvailableIndex = inputString.find_first_of(" ", errorFoundIndex + 1);
+        std::string frameAvailableCallbackId = inputString.substr(errorFoundIndex + 1, frameAvailableIndex - errorFoundIndex - 1);
 
 
         //std::string errorEvent = "community.barcodescanner.errorfound.native";
@@ -349,7 +355,8 @@ static uint32_t rotation = 0;
 		}
 
 		// Now start capturing burst frames in JPEG format for sending to the front end.
-		err = camera_start_burst(mCameraHandle, NULL, NULL, NULL, &image_callback, NULL);
+        // Send in frameCallbackId as last argument to image_callback function
+		err = camera_start_burst(mCameraHandle, NULL, NULL, NULL, &image_callback, frameAvailableCallbackId);
 		if ( err != CAMERA_EOK) {
 #ifdef DEBUG
 			fprintf(stderr, "Ran into an issue when starting up the camera in burst mode\n");

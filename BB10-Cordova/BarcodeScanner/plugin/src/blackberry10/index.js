@@ -19,6 +19,7 @@ var barcodescanner,
 	successStartCallbackId,
 	errorFoundCallbackId,
 	codeFoundCallbackId,
+	frameAvailableCallbackId,
 	resultObjs = {},
 	//threadCallback = null,
    _utils = require("../../lib/utils"),
@@ -41,6 +42,9 @@ module.exports = {
 			case "codeFound":
 				codeFoundCallbackId = result.callbackId;
 				break;
+			case "frameAvailable":
+				frameAvailableCallbackId = result.callbackId;
+				break;
 			default:
 				console.log("registerCallbackOnce received an " +
 					"inappropriate callback");
@@ -55,17 +59,16 @@ module.exports = {
 		result.noResult(true);
 	}
 
-	registerFrameAvailableCallback : function(success, fail, args, env){
+	/*registerFrameAvailableCallback : function(success, fail, args, env){
 		var result = PluginResult(args, env);
 
-		if(!frameAvailableCallback){
-			frameAvailableCallback = result.callbackId;
+		if(!frameAvailableCallbackId){
+			frameAvailableCallbackId = result.callbackId;
 			resultObjs[result.callbackId] = result;
 			// Keep callback
         	result.ok(template.getInstance().startThread(result.callbackId), true);
 		} else{
-			// Error message, don't keep callback
-			result.error(template.getInstance().startThread(result.callbackId), false);
+			result.ok(template.getInstance().startThread(frameAvailableCallback), true);
 		}
 		
 
@@ -92,7 +95,7 @@ module.exports = {
 		// (for onEvent)
 		result.noResult(true);
 
-	}
+	}*/
 
 	startRead : function(success, fail, args, env){
 		var result = PluginResult(args, env);
@@ -190,7 +193,8 @@ JNEXT.barcodescanner = function () {
 
 	self.startRead = function(callbackId){
 		return JNEXT.invoke(self.m_id, "startRead " + callbackId + " " + 
-			successStartCallbackId + " " + errorFoundCallbackId);
+			successStartCallbackId + " " + errorFoundCallbackId + " " + 
+			frameAvailableCallbackId);
 	}
 
 	// calls into InvokeMethod(string command) in barcodescanner_js.cpp
@@ -252,12 +256,11 @@ JNEXT.barcodescanner = function () {
 			callbackId = arData[0],
 			result = resultObjs[callbackId],
 			//data = arData.slice(1, arData.length).join(" ");
-			jsonData;
+			jsonData =  arData.slice(1, arData.length).join(" ");
 
 		if (result) {
 
 			if(callbackId == successStartCallbackId){
-				jsonData = arData.slice(1, arData.length).join(" ");
 				// For standard asynchronous one-time events(those 
 				// registered with .once).
 				// Calls the success method we registered at the beginning 
@@ -265,13 +268,16 @@ JNEXT.barcodescanner = function () {
 				result.callbackOk(jsonData, false);
 				delete resultObjs[callbackId];
 			} else if (callbackId == errorFoundCallbackId){
-				jsonData = arData.slice(1, arData.length).join(" ");
 				// For standard asynchronous one-time events(those 
 				// registered with .once).
 				result.callbackOk(jsonData, false);
 				delete resultObjs[callbackId];
+			} else if(callbackId == frameAvailableCallbackId){
+				// We keep the callbackId since frameAvailable may 
+				// be called several times.
+				result.callbackOk(jsonData, true);
 			} else{
-				result.callbackOk(data, true);
+				result.callbackOk(jsonData, true);
 			}
 		}
 	};

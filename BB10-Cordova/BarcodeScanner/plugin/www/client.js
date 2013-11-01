@@ -60,9 +60,13 @@ var _self = {},
 			exec(successStart, fail, _ID, "registerCallbackOnce", {callback: "successStart"});
 		}
 
-		if ( canvasID !== null ) {
+		/*if ( canvasID !== null ) {
 			canvas = document.getElementById(canvasID);
 			window.webworks.event.add(_ID, "community.barcodescanner.frameavailable", frameAvailable);
+		}*/
+
+		if ( canvasID != null ) {
+			exec(frameAvailable, fail, _ID, "registerCallbackOnce", {callback: "frameAvailable"});	
 		}
 
 		/*
