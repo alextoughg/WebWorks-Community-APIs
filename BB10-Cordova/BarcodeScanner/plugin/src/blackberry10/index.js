@@ -165,7 +165,7 @@ module.exports = {
 // JavaScript wrapper for JNEXT plugin for connection
 ///////////////////////////////////////////////////////////////////
 
-JNEXT.barcodescanner = function () {
+JNEXT.barcodescannerJS = function () {
 	var self = this,
 		hasInstance = false;
 
@@ -174,11 +174,11 @@ JNEXT.barcodescanner = function () {
 	};
 
 	self.init = function () {
-		if (!JNEXT.require("libbarcodescanner")) {
+		if (!JNEXT.require("libBarcodeScanner")) {
 			return false;
 		}
 
-		self.m_id = JNEXT.createObject("libbarcodescanner.barcodescannerJS");
+		self.m_id = JNEXT.createObject("libBarcodeScanner.barcodescannerJS");
 
 		if (self.m_id === "") {
 			return false;
@@ -305,4 +305,4 @@ JNEXT.barcodescanner = function () {
 
 };
 
-barcodescanner = new JNEXT.barcodescanner();
+barcodescanner = new JNEXT.barcodescannerJS();

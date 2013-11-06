@@ -15,7 +15,7 @@
 */
 
 var _self = {},
-	_ID = "community.templateplugin",
+	_ID = "community.barcodescannerplugin",
 	exec = cordova.require("cordova/exec");
 
 
@@ -38,8 +38,9 @@ var _self = {},
 
 		// For callbacks
 		var success = function (data, response) {
-				var json = JSON.parse(data);
-				callback(json);
+				//var json = JSON.parse(data);
+				//callback(json);
+				console.log("startRead started successfully with data: " + data);
 			},
 			fail = function (data, response) {
 				console.log("Error: " + data);

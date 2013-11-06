@@ -14,44 +14,44 @@
 * limitations under the License.
 */
 
-#ifndef TEMPLATENDK_HPP_
-#define TEMPLATENDK_HPP_
+#ifndef BARCODESCANNERNDK_HPP_
+#define BARCODESCANNERNDK_HPP_
 
 #include <string>
 #include <pthread.h>
 
-class TemplateJS;
+class BarcodeScannerJS;
 
 namespace webworks {
 
-class TemplateNDK {
+class BarcodeScannerNDK {
 public:
-	explicit TemplateNDK(TemplateJS *parent = NULL);
-	virtual ~TemplateNDK();
+	explicit BarcodeScannerNDK(BarcodeScannerJS *parent = NULL);
+	virtual ~BarcodeScannerNDK();
 
 	// The extension methods are defined here
-	std::string templateTestString();
+	std::string barcodescannerTestString();
 
-	std::string templateTestString(const std::string& inputString);
+	std::string barcodescannerTestString(const std::string& inputString);
 
-	std::string getTemplateProperty();
+	std::string getBarcodeScannerProperty();
 
-	void setTemplateProperty(const std::string& inputString);
+	void setBarcodeScannerProperty(const std::string& inputString);
 
-	void templateTestAsync(const std::string& callbackId, const std::string& inputString);
+	void barcodescannerTestAsync(const std::string& callbackId, const std::string& inputString);
 
-	std::string templateStartThread(const std::string& callbackId);
+	std::string barcodescannerStartThread(const std::string& callbackId);
 
-	std::string templateStopThread();
+	std::string barcodescannerStopThread();
 
 	bool isThreadHalt();
 
-	void templateThreadCallback();
+	void barcodescannerThreadCallback();
 
 private:
-	TemplateJS *m_pParent;
-	int templateProperty;
-	int templateThreadCount;
+	BarcodeScannerJS *m_pParent;
+	int barcodescannerProperty;
+	int barcodescannerThreadCount;
 	bool threadHalt;
 	std::string threadCallbackId;
 	pthread_t m_thread;
@@ -61,4 +61,4 @@ private:
 
 } // namespace webworks
 
-#endif /* TEMPLATENDK_H_ */
+#endif /* BARCODESCANNERNDK_H_ */

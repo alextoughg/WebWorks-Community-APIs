@@ -27,8 +27,8 @@
 
 #include <string>
 #include "../public/tokenizer.h"
-#include "template_js.hpp"
-#include "template_ndk.hpp"
+#include "barcodescanner_js.hpp"
+#include "barcodescanner_ndk.hpp"
 
 using namespace std;
 
@@ -90,7 +90,7 @@ string BarcodeScannerJS::InvokeMethod(const string& command) {
 	std::string callbackId = command.substr(commandIndex + 1, callbackIndex - commandIndex - 1);
 	std::string arg = command.substr(callbackIndex + 1, command.length());
 
-	// based on the command given, run the appropriate method in template_ndk.cpp
+	// based on the command given, run the appropriate method in barcodescanner_ndk.cpp
 	if(str_command == "startRead"){
 		// here arg contains the successStartCallbackId, errorFoundCallbackId
 		// and frameAvailableCallbackId
@@ -98,10 +98,10 @@ string BarcodeScannerJS::InvokeMethod(const string& command) {
 	}
 
 	if (strCommand == "testString") {
-		return m_pBarcodeScannerController->templateTestString();
+		return m_pBarcodeScannerController->barcodescannerTestString();
 	} else if (strCommand == "testStringInput") {
-		return m_pBarcodeScannerController->templateTestString(arg);
-	} else if (strCommand == "templateProperty") {
+		return m_pBarcodeScannerController->barcodescannerTestString(arg);
+	} else if (strCommand == "barcodescannerProperty") {
 		// if arg exists we are setting property
 		if (arg != strCommand) {
 			m_pBarcodeScannerController->setBarcodeScannerProperty(arg);
@@ -109,11 +109,11 @@ string BarcodeScannerJS::InvokeMethod(const string& command) {
 			return m_pBarcodeScannerController->getBarcodeScannerProperty();
 		}
 	} else if (strCommand == "testAsync") {
-		m_pBarcodeScannerController->templateTestAsync(callbackId, arg);
-	} else if (strCommand == "templateStartThread") {
-		return m_pBarcodeScannerController->templateStartThread(callbackId);
-	} else if (strCommand == "templateStopThread") {
-		return m_pBarcodeScannerController->templateStopThread();
+		m_pBarcodeScannerController->barcodescannerTestAsync(callbackId, arg);
+	} else if (strCommand == "barcodescannerStartThread") {
+		return m_pBarcodeScannerController->barcodescannerStartThread(callbackId);
+	} else if (strCommand == "barcodescannerStopThread") {
+		return m_pBarcodeScannerController->barcodescannerStopThread();
 	}
 
 	strCommand.append(";");

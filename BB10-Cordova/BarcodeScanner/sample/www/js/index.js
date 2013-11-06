@@ -48,16 +48,16 @@ var app = {
 		app.testPluginCalls();
 	},
 	testPluginCalls: function() {
-		if (community && community.templateplugin) {
-			app.writeOut(community.templateplugin.test());
-			app.writeOut(community.templateplugin.testInput('My Test Data'));
-			app.writeOut('Template Property was: ' + community.templateplugin.templateProperty);
-			community.templateplugin.templateProperty = 99;
-			app.writeOut('Now: ' + community.templateplugin.templateProperty);
+		if (community && community.barcodescannerplugin) {
+			app.writeOut(community.barcodescannerplugin.test());
+			app.writeOut(community.barcodescannerplugin.testInput('My Test Data'));
+			app.writeOut('Template Property was: ' + community.barcodescannerplugin.barcodescannerProperty);
+			community.barcodescannerplugin.barcodescannerProperty = 99;
+			app.writeOut('Now: ' + community.barcodescannerplugin.barcodescannerProperty);
 			app.writeOut('Sent Async Request');
 			var jsonData = {"value1":10,"value2":14};
-			community.templateplugin.testAsync(jsonData, app.aSyncCallback);
-			community.templateplugin.startThread(app.threadCallback);
+			community.barcodescannerplugin.testAsync(jsonData, app.aSyncCallback);
+			community.barcodescannerplugin.startThread(app.threadCallback);
 		} else {
 			app.writeOut("Plugin was not found");
 		}
@@ -80,7 +80,7 @@ var app = {
 			var json = JSON.parse(data);
 			app.writeOut("Thread Callback: " + json.threadCount);
 			if (json.threadCount >= 10) {
-				var end = community.templateplugin.stopThread();
+				var end = community.barcodescannerplugin.stopThread();
 				app.writeOut(end);
 				app.threadStarted = false;
 			}
