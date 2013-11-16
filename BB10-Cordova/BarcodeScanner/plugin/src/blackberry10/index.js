@@ -98,6 +98,9 @@ module.exports = {
 	}*/
 
 	startRead : function(success, fail, args, env){
+
+		console.log("Here");
+
 		var result = PluginResult(args, env);
 		resultObjs[result.callbackId] = result;
 		barcodescanner.getInstance().startRead(result.callbackId)

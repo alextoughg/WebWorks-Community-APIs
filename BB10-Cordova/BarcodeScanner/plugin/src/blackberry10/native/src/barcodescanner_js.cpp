@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-#include <json/reader.h>
-#include <json/writer.h>
-
-#include <zxing/common/GreyscaleLuminanceSource.h>
-#include <zxing/common/HybridBinarizer.h>
-#include <zxing/MultiFormatReader.h>
-#include <img/img.h>
-#include <stdio.h>
-
-#include <sstream>
-
 #include <string>
 #include "../public/tokenizer.h"
 #include "barcodescanner_js.hpp"
@@ -91,33 +80,12 @@ string BarcodeScannerJS::InvokeMethod(const string& command) {
 	std::string arg = command.substr(callbackIndex + 1, command.length());
 
 	// based on the command given, run the appropriate method in barcodescanner_ndk.cpp
-	if(str_command == "startRead"){
+	if(strCommand == "startRead"){
 		// here arg contains the successStartCallbackId, errorFoundCallbackId
 		// and frameAvailableCallbackId
 		return m_pBarcodeScannerController->barcodescannerStartRead(callbackId, arg);
 	}
 
-	if (strCommand == "testString") {
-		return m_pBarcodeScannerController->barcodescannerTestString();
-	} else if (strCommand == "testStringInput") {
-		return m_pBarcodeScannerController->barcodescannerTestString(arg);
-	} else if (strCommand == "barcodescannerProperty") {
-		// if arg exists we are setting property
-		if (arg != strCommand) {
-			m_pBarcodeScannerController->setBarcodeScannerProperty(arg);
-		} else {
-			return m_pBarcodeScannerController->getBarcodeScannerProperty();
-		}
-	} else if (strCommand == "testAsync") {
-		m_pBarcodeScannerController->barcodescannerTestAsync(callbackId, arg);
-	} else if (strCommand == "barcodescannerStartThread") {
-		return m_pBarcodeScannerController->barcodescannerStartThread(callbackId);
-	} else if (strCommand == "barcodescannerStopThread") {
-		return m_pBarcodeScannerController->barcodescannerStopThread();
-	}
-
-	strCommand.append(";");
-	strCommand.append(command);
 	return strCommand;
 }
 

@@ -17,8 +17,9 @@
 #ifndef BARCODESCANNERNDK_HPP_
 #define BARCODESCANNERNDK_HPP_
 
+#include <camera/camera_api.h>
 #include <string>
-#include <pthread.h>
+
 
 class BarcodeScannerJS;
 
@@ -30,33 +31,11 @@ public:
 	virtual ~BarcodeScannerNDK();
 
 	// The extension methods are defined here
-	std::string barcodescannerTestString();
-
-	std::string barcodescannerTestString(const std::string& inputString);
-
-	std::string getBarcodeScannerProperty();
-
-	void setBarcodeScannerProperty(const std::string& inputString);
-
-	void barcodescannerTestAsync(const std::string& callbackId, const std::string& inputString);
-
-	std::string barcodescannerStartThread(const std::string& callbackId);
-
-	std::string barcodescannerStopThread();
-
-	bool isThreadHalt();
-
-	void barcodescannerThreadCallback();
+	std::string barcodescannerStartRead(const std::string& callbackId, const std::string& inputString);
 
 private:
 	BarcodeScannerJS *m_pParent;
-	int barcodescannerProperty;
-	int barcodescannerThreadCount;
-	bool threadHalt;
-	std::string threadCallbackId;
-	pthread_t m_thread;
-	pthread_cond_t cond;
-	pthread_mutex_t mutex;
+	camera_handle_t mCameraHandle;
 };
 
 } // namespace webworks
