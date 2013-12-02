@@ -1,4 +1,4 @@
-Template for BlackBerry 10 Cordova Plugins
+hTemplate for BlackBerry 10 Cordova Plugins
 ==========================================
 
 BlackBerry 10 Cordova Plugins create a bridge between JavaScript code in an HTML5 application and C/C++ and/or Qt code in the plugin, allowing access to native libraries, which are not part of the HTML5 specification. The BlackBerry 10 Plugins included with the Cordova SDK also follow the same or similar format as shown in this template.
